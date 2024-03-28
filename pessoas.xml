@@ -4,7 +4,7 @@
   <peso>63</peso>
   <altura>1.86</altura>
 </pessoa>
-<pessoa codigo="2023261023">
+<pessoa id="2023261023">
   <nome>Igor Kammer Grahl</nome>
   <peso>72</peso>
   <altura>1.83</altura>

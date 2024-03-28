@@ -1,21 +1,6 @@
 <?php
 
-    /*
-
-    $xmlString = "<administradores><titulo>Administradores</titulo><administrador numeroCNS='2023261023'><nome>Igor Kammer Grahl</nome><dataNascimento>2005-02-14</dataNascimento><cpf>180.719.870-00</cpf><senha>12345</senha></administrador></administradores>";
-    $dom = new DOMDocument;
-    $dom->loadXML($xmlString);
-    $dom->save("teste.xml");
-
-    $dom->formatOutput = true;
-    echo $dom->saveXML();
-
-    $pessoas = simplexml_load_file("teste.xml");
-    $teste = $pessoas->xpath("/lotes");
-    var_dump($teste[0]);
-    echo $teste[0]["titulo"];
-
-    */
+    // Lendo um arquivo XML
 
     $xml = simplexml_load_file("teste.xml");
     $list = $xml->lote;
@@ -33,8 +18,6 @@
     define("ARQUIVO", "pessoas.xml");
 
     $dom = new DOMDocument;
-
-    /*
 
     $dom->encoding = "UTF-8";
     $dom->xmlVersion = "1.0";
@@ -56,16 +39,16 @@
     $dom->appendChild($pessoa_node);
     $dom->save(ARQUIVO);
 
-    */
-
     // Adicionando uma pessoa em um arquivo já existente
 
-    $dom->load(ARQUIVO);
+    if(file_exists(ARQUIVO)){
+        $dom->load(ARQUIVO);
+    }
 
     $pessoa = array("id"=>2023261023, "nome"=>"Igor Kammer Grahl", "peso"=>72, "altura"=>1.83);
 
     $pessoa_node = $dom->createElement("pessoa");
-    $attr_codigo = new DOMAttr("codigo", $pessoa["id"]);
+    $attr_codigo = new DOMAttr("id", $pessoa["id"]);
     $pessoa_node->setAttributeNode($attr_codigo);
 
     $child_node_nome = $dom->createElement("nome", $pessoa["nome"]);
