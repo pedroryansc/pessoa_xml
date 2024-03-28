@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pessoa codigo="2023004505">
+  <nome>Pedro Ryan Coelho Iplinski</nome>
+  <peso>63</peso>
+  <altura>1.86</altura>
+</pessoa>
+<pessoa codigo="2023261023">
+  <nome>Igor Kammer Grahl</nome>
+  <peso>72</peso>
+  <altura>1.83</altura>
+</pessoa>
