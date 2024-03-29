@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pessoa codigo="2023004505">
-  <nome>Pedro Ryan Coelho Iplinski</nome>
-  <peso>63</peso>
-  <altura>1.86</altura>
-</pessoa>
-<pessoa id="2023261023">
-  <nome>Igor Kammer Grahl</nome>
-  <peso>72</peso>
-  <altura>1.83</altura>
-</pessoa>
+<pessoas>
+  <pessoa id="20240329044501">
+    <nome>Pedro Ryan Coelho Iplinski</nome>
+    <peso>63</peso>
+    <altura>1.87</altura>
+  </pessoa>
+<pessoa id="20240329044517"><nome>Gianluca Matos Klaumann</nome><peso>85</peso><altura>1.78</altura></pessoa><pessoa id="20240329044546"><nome>Pedro Henrique Damann</nome><peso>80</peso><altura>1.78</altura></pessoa><pessoa id="20240329044600"><nome>Igor Kammer Grahl</nome><peso>72</peso><altura>1.83</altura></pessoa><pessoa id="20240329045429"><nome>Teste</nome><peso>1</peso><altura>0</altura></pessoa></pessoas>

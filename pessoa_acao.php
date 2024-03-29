@@ -10,9 +10,7 @@
 
     /* definição de constantes */
     define("DESTINO", "index.php");
-    define("ARQUIVO_XML", "pessoa.xml");
-
-    $dom = new DOMDocument();
+    define("ARQUIVO_XML", "pessoas.xml");
 
     /* escolha da ação que processará a requisição */
     $acao = "";
@@ -73,31 +71,17 @@
     */
 
     /*
-    * Método que salva os dados no formato xml no arquivo em disco
-    * @param $dados String dados codificados no formato xml
-    * @param $arquivo String nome do arquivo onde serão salvos os dados
-    * @return void
-    */
-    function salvar_xml($dados, $arquivo)
-    {
-        $fp = fopen($arquivo, "w");
-        fwrite($fp, $dados);
-        fclose($fp);
-    }
-    /*
     * Método que lê os dados no formato xml do arquivo em disco
     * @param $arquivo String nome do arquivo onde serão salvos os dados
     * @return String dados codificados no formato xml
     */
-    function ler_xml($arquivo)
-    {
-        if($arquivo == null)
-            salvar_xml($arquivo);
-        $arquivo = file_get_contents($arquivo);
-        // $xml = xml_decode($arquivo);
-        return $arquivo;
-        // return $xml;
+
+    function ler_xml(){
+        $xml = simplexml_load_file(ARQUIVO_XML);
+        $pessoas = $xml->pessoa;
+        return $pessoas;
     }
+
     /*
     * Método que lê os dados e os carrega em um variável chamada xml
     * @param $id int identificador numérico do registro
@@ -167,24 +151,45 @@
         header("location:" . DESTINO);
 
     }
+
     /*
     * Método salva alterações feitas em um registro
     * @return void
     */
-    function salvar()
-    {
-        $xml = NULL;
+
+    function salvar(){
+        $dom = new DOMDocument();
+
+        $dom->xmlVersion = "1.0";
+        $dom->encoding = "UTF-8";
+        $dom->formatOutput = true;
+
+        if(file_exists(ARQUIVO_XML)){
+            $dom->load(ARQUIVO_XML);
+            $pessoas = $dom->getElementsByTagName("pessoas");
+            $pessoas = $pessoas->item(0);
+        } else
+            $pessoas = $dom->createElement("pessoas");
+        
         $pessoa = tela2array();
 
-        $xml = ler_xml(ARQUIVO_XML);
+        $pessoa_node = $dom->createElement("pessoa");
+        $id = new DOMAttr("id", $pessoa["id"]);
+        $pessoa_node->setAttributeNode($id);
+    
+        $nome = $dom->createElement("nome", $pessoa["nome"]);
+        $pessoa_node->appendChild($nome);
+    
+        $peso = $dom->createElement("peso", $pessoa["peso"]);
+        $pessoa_node->appendChild($peso);
+    
+        $altura = $dom->createElement("altura", $pessoa["altura"]);
+        $pessoa_node->appendChild($altura);
 
-        if ($xml == NULL) {
-            $xml = array();
-        }
+        $pessoas->appendChild($pessoa_node);
 
-        array_push($xml, $pessoa);
-
-        salvar_xml($xml, ARQUIVO_XML);
+        $dom->appendChild($pessoas);
+        $dom->save(ARQUIVO_XML);
 
         header("location:" . DESTINO);
     }

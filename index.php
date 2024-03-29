@@ -9,7 +9,10 @@
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR" data-theme="dark">
-<?php include 'cabecalho.php'; ?>
+<?php
+    include 'cabecalho.php';
+    require "pessoa_acao.php";
+?>
 
 <body>
     <main class="container">
@@ -24,14 +27,14 @@
                 <th>Excluir</th>
             </tr>
             <?php
-            $dados = json_decode(file_get_contents('pessoa.json'), true);
-            foreach ($dados as $key)
-                echo "<tr><td>{$key['id']}</td>
-                  <td>{$key['nome']}</td>
-                  <td>{$key['altura']}</td>
-                  <td>{$key['peso']}</td>
-                  <td align='center'><a role='button' href='pessoa_cad.php?id=" . $key['id'] . "';>A</a></td>
-                  <td align='center'><a role='button' href=javascript:excluirRegistro('pessoa_acao.php?acao=excluir&id=" . $key['id'] . "');>E</a></td>
+            $pessoas = ler_xml();
+            foreach ($pessoas as $pessoa)
+                echo "<tr><td>{$pessoa->attributes()->id}</td>
+                  <td>{$pessoa->nome}</td>
+                  <td>{$pessoa->altura}</td>
+                  <td>{$pessoa->peso}</td>
+                  <td align='center'><a role='button' href='pessoa_cad.php?id=" . $pessoa->attributes()->id . "';>A</a></td>
+                  <td align='center'><a role='button' href=javascript:excluirRegistro('pessoa_acao.php?acao=excluir&id=" . $pessoa->attributes()->id . "');>E</a></td>
               </tr>";
             ?>
         </table>
