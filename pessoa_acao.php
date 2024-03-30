@@ -1,18 +1,19 @@
 <?php
 
     /*
-    * Código adaptado a partir do código do professor Rodrigo Curvello
+    * Código adaptado a partir do código do professor Rodrigo Curvêllo
     * Controlador reponsável pela manutenção do cadastro da entidade Pessoa
     * @author Wesley R. Bezerra <wesley.bezerra@ifc.edu.br>
     * @version 0.1
     *
     */
 
-    /* definição de constantes */
+    // Definição de constantes
     define("DESTINO", "index.php");
     define("ARQUIVO_XML", "pessoas.xml");
 
-    /* escolha da ação que processará a requisição */
+    // Escolha da ação que processará a requisição
+
     $acao = "";
     switch ($_SERVER['REQUEST_METHOD']) {
         case 'GET':
@@ -39,8 +40,8 @@
     * Método que converte formulário html para array com respectivos dados
     * @return array
     */
-    function tela2array()
-    {
+
+    function tela2array(){
         $novo = array(
             'id' => isset($_POST['id']) ? $_POST['id'] : date("YmdHis"),
             'nome' => isset($_POST['nome']) ? $_POST['nome'] : "",
@@ -54,26 +55,23 @@
     }
 
     /*
-    * Método que converte array para XML
-    * @return String XML
-    */
-    
-    /*
-    function array2xml($array_dados, $xml_dados)
-    {
-        $xml_dados->id = $array_dados['id'];
-        $xml_dados->nome = $array_dados['nome'];
-        $xml_dados->peso = $array_dados['peso'];
-        $xml_dados->altura = $array_dados['altura'];
+     * Método que cria e configura um documento DOM
+     * @return DOMDocument 
+     */
 
-        return $xml_dados;
+    function gerarDom(){
+        $dom = new DOMDocument();
+
+        $dom->xmlVersion = "1.0";
+        $dom->encoding = "UTF-8";
+        $dom->formatOutput = true;
+
+        return $dom;
     }
-    */
 
     /*
-    * Método que lê os dados no formato xml do arquivo em disco
-    * @param $arquivo String nome do arquivo onde serão salvos os dados
-    * @return String dados codificados no formato xml
+    * Método que lê os dados no formato XML do arquivo em disco
+    * @return Vetor de dados codificados no formato XML
     */
 
     function ler_xml(){
@@ -83,86 +81,75 @@
     }
 
     /*
-    * Método que lê os dados e os carrega em um variável chamada xml
+    * Método que lê os dados e os carrega em um variável chamada pessoa
     * @param $id int identificador numérico do registro
     * @return String dados codificados no formato xml
     */
-    function carregar($id)
-    {
-        $xml = ler_xml(ARQUIVO_XML);
 
-        foreach ($xml as $key) {
-            if ($key->id == $id)
-                return (array) $key;
+    function carregar($id){
+        $pessoas = ler_xml();
+        foreach ($pessoas as $pessoa) {
+            if($pessoa->attributes()->id == $id)
+                return $pessoa;
         }
     }
 
     /*
-    * Método que altera os dados de um registro
+    * Método que altera os dados de um registro com SimpleXML
     * @return void
     */
-    function alterar()
-    {
-        $novo = tela2array();
 
-        $xml = ler_xml(ARQUIVO_XML);
+    function alterar(){
+        $dom = gerarDom();
 
-        for ($x = 0; $x < count($xml); $x++) {
-            if ($xml[$x]->id == $novo['id']) {
-                array2xml($novo, $xml[$x]);
+        $pessoa = tela2array();
+        
+        $xml = simplexml_load_file(ARQUIVO_XML);
+        for($i = 0; $i < count($xml->pessoa); $i++){
+            if($xml->pessoa[$i]->attributes()->id == $pessoa["id"]){
+                $xml->pessoa[$i]->nome = $pessoa["nome"];
+                $xml->pessoa[$i]->peso = $pessoa["peso"];
+                $xml->pessoa[$i]->altura = $pessoa["altura"];
             }
         }
 
-        // salvar_xml(xml_encode($xml), ARQUIVO_XML);
+        file_put_contents(ARQUIVO_XML, $xml->asXML());
 
         header("location:" . DESTINO);
-
     }
 
-
     /*
-    1 - abrir json em formato php;
-    2 - percorrer e achar o item pelo ID;
-    3 - estratégia de deletar;
-    4 - gravar em json novamente, sem o item;
-    5 - redirecionar para a página index.php
-    */
-
-    /*
-    * Método exclui um registro
+    * Método que exclui um registro
     * @return void
     */
-    function excluir()
-    {
-        $id = isset($_GET['id']) ? $_GET['id'] : "";
-        $xml = ler_xml(ARQUIVO_XML);
-        if ($xml == null)
-            $xml = array();
 
-        $novo = array();
-        for ($x = 0; $x < count($xml); $x++) {
-            var_dump($xml[$x]);
-            if ($xml[$x]->id != $id)
+    function excluir(){
+        $id = isset($_GET['id']) ? $_GET['id'] : 0;
 
-                array_push($novo, $xml[$x]);
+        $dom = gerarDom();
+
+        $dom->load(ARQUIVO_XML);
+        $pessoas = $dom->getElementsByTagName("pessoas");
+        $pessoas = $pessoas->item(0);
+        $pessoa = $pessoas->getElementsByTagName("pessoa");
+        for($i = 0; $i < count($pessoa); $i++){
+            if($pessoa->item($i)->getAttribute("id") == $id)
+                $pessoas->removeChild($pessoa->item($i));
         }
-        salvar_xml(xml_encode($novo), ARQUIVO_XML);
+
+        $dom->appendChild($pessoas);
+        $dom->save(ARQUIVO_XML);
 
         header("location:" . DESTINO);
-
     }
 
     /*
-    * Método salva alterações feitas em um registro
+    * Método que salva um registro no arquivo XML
     * @return void
     */
 
     function salvar(){
-        $dom = new DOMDocument();
-
-        $dom->xmlVersion = "1.0";
-        $dom->encoding = "UTF-8";
-        $dom->formatOutput = true;
+        $dom = gerarDom();
 
         if(file_exists(ARQUIVO_XML)){
             $dom->load(ARQUIVO_XML);

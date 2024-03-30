@@ -9,13 +9,13 @@
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
-<?php include 'cabecalho.php'; ?>
 <?php
-include "pessoa_acao.php";
-$id = isset($_GET['id']) ? $_GET['id'] : 0;
-$dados = array();
-if ($id != 0)
-    $dados = carregar($id);
+    include 'cabecalho.php';
+    include "pessoa_acao.php";
+
+    $id = isset($_GET['id']) ? $_GET['id'] : 0;
+    if ($id != 0)
+        $pessoa = carregar($id);
 ?>
 
 <body>
@@ -33,15 +33,15 @@ if ($id != 0)
 
                 <label for="nome">Nome</label>
                 <input type="text" size="40" name="nome" id="nome" value="<?php if ($id != 0)
-                    echo $dados['nome']; ?>" required><br>
+                    echo $pessoa->nome; ?>" required><br>
 
                 <label for="peso">Peso</label>
                 <input type="number" name="peso" id="peso" value="<?php if ($id != 0)
-                    echo $dados['peso']; ?>"><br>
+                    echo $pessoa->peso; ?>"><br>
 
                 <label for="altura">Altura</label>
                 <input type="text" name="altura" id="altura" value="<?php if ($id != 0)
-                    echo $dados['altura']; ?>"><br>
+                    echo $pessoa->altura; ?>"><br>
 
                 <input class="primary" type="submit" name="acao" id="acao" value="<?php if ($id == 0)
                     echo "Salvar";
