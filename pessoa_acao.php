@@ -100,8 +100,6 @@
     */
 
     function alterar(){
-        $dom = gerarDom();
-
         $pessoa = tela2array();
         
         $xml = simplexml_load_file(ARQUIVO_XML);

@@ -15,7 +15,7 @@
 
     $pessoa = array("id"=>2023004505, "nome"=>"Pedro Ryan Coelho Iplinski", "peso"=>63, "altura"=>1.86);
 
-    define("ARQUIVO", "pessoas.xml");
+    define("ARQUIVO", "pessoa.xml");
 
     $dom = new DOMDocument;
 
@@ -24,8 +24,8 @@
     $dom->formatOutput = true;
 
     $pessoa_node = $dom->createElement("pessoa");
-    $attr_codigo = new DOMAttr("codigo", $pessoa["id"]);
-    $pessoa_node->setAttributeNode($attr_codigo);
+    $attr_id = new DOMAttr("id", $pessoa["id"]);
+    $pessoa_node->setAttributeNode($attr_id);
 
     $child_node_nome = $dom->createElement("nome", $pessoa["nome"]);
     $pessoa_node->appendChild($child_node_nome);
@@ -48,8 +48,8 @@
     $pessoa = array("id"=>2023261023, "nome"=>"Igor Kammer Grahl", "peso"=>72, "altura"=>1.83);
 
     $pessoa_node = $dom->createElement("pessoa");
-    $attr_codigo = new DOMAttr("id", $pessoa["id"]);
-    $pessoa_node->setAttributeNode($attr_codigo);
+    $attr_id = new DOMAttr("id", $pessoa["id"]);
+    $pessoa_node->setAttributeNode($attr_id);
 
     $child_node_nome = $dom->createElement("nome", $pessoa["nome"]);
     $pessoa_node->appendChild($child_node_nome);
